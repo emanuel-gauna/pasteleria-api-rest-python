@@ -23,9 +23,9 @@ def wait_for_mysql():
     wait_cmd = ['wait-for-it.sh', '--host=' + os.getenv('DB_HOST'), '--port=' + os.getenv('DB_PORT'), '--timeout=30']
     subprocess.run(wait_cmd, check=True)
 
-def before_first_request():
+@app.before_request
+def before_request():
     wait_for_mysql()  # Esperar a que MySQL esté listo antes de conectar
-
 
 print(os.getenv('DB_NAME'))
 print(os.getenv('DB_USER'))
@@ -38,3 +38,6 @@ from .routes import *
 
 #conectar la base de datos
 db.connect()
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)

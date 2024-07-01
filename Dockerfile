@@ -15,8 +15,8 @@ COPY requirements.txt requirements.txt
 # Instala las dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
-#intala el controlador de MySQL
-RUN pip install mysqlclient 
+# Instala el controlador de MySQL
+RUN pip install mysqlclient
 
 # Copia el resto de los archivos de la aplicación
 COPY . .
@@ -28,4 +28,4 @@ ENV FLASK_APP=app
 EXPOSE 5000
 
 # Define el comando por defecto para ejecutar la aplicación
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["wait-for-it.sh", "mysql-server:3306", "--", "flask", "run", "--host=0.0.0.0"]
