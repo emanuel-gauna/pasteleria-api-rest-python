@@ -20,7 +20,7 @@ db = MySQLDatabase(
 )
 
 def wait_for_mysql():
-    wait_cmd = ['wait-for-it.sh', '--host=' + os.getenv('DB_HOST'), '--port=' + os.getenv('DB_PORT'), '--timeout=30']
+    wait_cmd = ['wait-for-it.sh', '--host=' + os.getenv('DB_HOST'), '--port=' + os.getenv('DB_PORT'), '--timeout=60']
     subprocess.run(wait_cmd, check=True)
 
 @app.before_request
