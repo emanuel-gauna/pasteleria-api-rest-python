@@ -3,6 +3,7 @@ from flask import Flask
 import subprocess
 from peewee import MySQLDatabase 
 from dotenv import load_dotenv
+from flask_cors import CORS 
 import os 
 
 
@@ -10,6 +11,7 @@ load_dotenv()
 
 app = Flask(__name__) 
 app.config['DEBUG'] = True
+CORS(app)
 
 db = MySQLDatabase(
     os.getenv('DB_NAME'),

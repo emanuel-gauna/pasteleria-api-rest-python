@@ -1,12 +1,17 @@
 pasteleria_api/
 ├── app/
+│   ├── __pycache__
 │   ├── __init__.py
 │   ├── models.py
 │   ├── routes.py
 │   ├── config.py
 ├── venv/
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
 ├── .env
+├── .env.example
+├── .gitignore
+├── .create_database.py
+├── docker-compose.yml
+├── Dockerfile
+├── folders.md
 └── README.md
+├── requirements.txt

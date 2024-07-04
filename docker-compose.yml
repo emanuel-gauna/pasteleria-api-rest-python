@@ -25,7 +25,7 @@ services:
       - "5000:5000"
     depends_on:
       - mysql
-    command: bash -c "wait-for-it.sh  mysql-server:3306 -- flask run --host=0.0.0.0"
+    command: bash -c "wait-for-it.sh mysql-server:3306 -- sh -c 'python create_database.py && flask run --host=0.0.0.0'"
     environment:
       FLASK_ENV: development
       DB_NAME: ${DB_NAME}
