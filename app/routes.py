@@ -39,7 +39,7 @@ def create_producto():
             descripcion=data['descripcion'],
             precio=data['precio'],
             disponible=data['disponible'],
-            imagen=data.get('imagen', "/path/to/default/image")  # imagen es opcional, utiliza una imagen por defecto si no se proporciona
+            imagen=data.get('imagen', "../static/img/Captura de pantalla 2024-03-17 201208.png")  # imagen es opcional, utiliza una imagen por defecto si no se proporciona
         )
         return jsonify({'id': nuevo_producto.id}), 201
     except KeyError as e:

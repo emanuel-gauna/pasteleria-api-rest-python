@@ -11,7 +11,7 @@ class Producto(BaseModel):
     descripcion = CharField()
     precio = IntegerField()
     disponible = BooleanField(default=True)  # Asumiendo que por defecto está disponible
-    imagen = CharField(default="/path/to/default/image")  # Ruta de la imagen, puede ser opcional
+    imagen = CharField(default="../static/img/Captura de pantalla 2024-03-17 201208.png")  # Ruta de la imagen, puede ser opcional
 
     class Meta:
         table_name = 'productos'  # Nombre de la tabla en la base de datos

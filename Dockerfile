@@ -25,4 +25,4 @@ ENV FLASK_APP=app
 EXPOSE 5000
 
 # Define el comando por defecto para ejecutar la aplicación
-CMD ["wait-for-it.sh", "mysql-server:3306", "--timeout=60" ,"--", "sh", "-c", "python create_database.py && flask run --host=0.0.0.0 --port=5000"]
+CMD ["wait-for-it.sh", "mysql-server:3306", "--timeout=60" ,"--", "sh", "-c", "python create_database.py && python update_image_paths.py && flask run --host=0.0.0.0 --port=5000"]
