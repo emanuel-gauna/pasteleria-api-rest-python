@@ -46,91 +46,91 @@ def create_and_populate_database():
                 'descripcion': "Deliciosos muffins horneados con arándanos frescos y una pizca de canela de Arándanos, banana, o Frutos Rojos, chips de chocolate y rellenos de dulce de leche (precio por unidad)",
                 'precio': 600.00,
                 'disponible': True,
-                'imagen': "/static/img/Muffins de coco y dulce de leche.jpg"
+                'imagen': "../static/img/Muffins de coco y dulce de leche.jpg"
             },
             {
                 'nombre': "Budín de Limón y Chocolate con  Nuez",
                 'descripcion': "Budín esponjoso con el sabor cítrico de la naranja y un glaseado de azúcar, de nuez y bañado en  chocolate (precio por unidad)",
                 'precio': 3000,
                 'disponible': True,
-                'imagen': "/static/img/budin de limon y amapolas , budin de chocolate y nuez.png"
+                'imagen': "../static/img/budin de limon y amapolas , budin de chocolate y nuez.png"
             },
             {
                 'nombre': "Escones de Queso",
                 'descripcion': "Escones de queso salados, para acompañar con fiambres o solos (precio por unidad)",
                 'precio': 100,
                 'disponible': False,
-                'imagen': "/static/img/scones de queso.png"
+                'imagen': "../static/img/scones de queso.png"
             },
             {
                 'nombre': "Tarta de Manzana",
                 'descripcion': "Tarta crujiente con una capa de manzanas frescas y un toque de canela, perfecta para cualquier ocasión.",
                 'precio': 6000,
                 'disponible': True,
-                'imagen': "/static/img/tarta-manzana.jpg"
+                'imagen': "../static/img/tarta-manzana.jpg"
             },
             {
                 'nombre': "Roll de Canela",
                 'descripcion': "Rolles de canela dulces con azucar negra por 6 unidades, ideales para la merienda o desayuno",
                 'precio': 3500,
                 'disponible': True,
-                'imagen': "/static/img/Roll-canela.jpg"
+                'imagen': "../static/img/Roll-canela.jpg"
             },
             {
                 'nombre': "Pasta Frola",
                 'descripcion': "Clásica Pastaflora de dulce de membrillo, batata, y dulce de leche",
                 'precio': 5000,
                 'disponible': True,
-                'imagen': "/static/img/pastafrola.jpg"
+                'imagen': "../static/img/pastafrola.jpg"
             },
             {
                 'nombre': "Medialunas",
                 'descripcion': "medialunas de manteca y de grasa, ideal para desayuno y merienda (precio por docena)",
                 'precio': 4000,
                 'disponible': True,
-                'imagen': "/static/img/medialunas.jpg"
+                'imagen': "../static/img/medialunas.jpg"
             },
             {
                 'nombre': "Rosca de Reyes",
                 'descripcion': "Rosca dulce tradicional decorada con frutas confitadas y azúcar glase, típica de la celebración del Día de Reyes o Pascuas.",
                 'precio': 4500,
                 'disponible': False,
-                'imagen': "/static/img/rosca-reyes.jpg"
+                'imagen': "../static/img/rosca-reyes.jpg"
             },
             {
                 'nombre': "Cookies",
                 'descripcion': "Galletas caseras dulces , crujientes por fuera y suaves por dentro, ideales para acompañar un café con chispas de chocolate. (precio por 250GR)",
                 'precio': 1000,
                 'disponible': True,
-                'imagen': "/static/img/cookies.jpg"
+                'imagen': "../static/img/cookies.jpg"
             },
             {
                 'nombre': "Chipá",
                 'descripcion': "Galletas saladas horneadas con una pizca de sal marina y hierbas frescas, perfectas para acompañar un queso.(precio por 250 gr)",
                 'precio': 2000,
                 'disponible': True,
-                'imagen': "/static/img/chipá.jpg"
+                'imagen': "../static/img/chipá.jpg"
             },
             {
                 'nombre': "Alfajores de Maizena",
                 'descripcion': "Dulces alfajores rellenos de dulce de leche y cubiertos con coco rallado (precio por unidad)",
                 'precio': 250,
                 'disponible': True,
-                'imagen': "/static/img/IMG-20240505-WA0028.jpg"
+                'imagen': "../static/img/IMG-20240505-WA0028.jpg"
             },
             {
                 'nombre': "Shots - chocotorta- cheesecake",
                 'descripcion': "shots de postres dedicados para ocaciones especiales cheesecake - chocotorta - red velvet (precio por unidad)",
                 'precio': 1000,
                 'disponible': False,
-                'imagen': "/static/img/shots-chocotorta.jpg"
+                'imagen': "../static/img/shots-chocotorta.jpg"
             },
             {
                 'nombre': "Desayunos dedicados",
                 'descripcion': "Desayunos dedicados para ocaciones especiales. consta de: 2 rodajas de budin marmolado, cake de manzana, porcion de torta, 2 pebetes de jyq, 3 chipacitos, 3 galletas glase, un jugo individual, infusiones varias (precio a convenir)",
                 'precio': 0,
                 'disponible': False,
-                'imagen': "/static/img/desayuno.jpg"
+                'imagen': "../static/img/desayuno.jpg"
             },
         ]
 
