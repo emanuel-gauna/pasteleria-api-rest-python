@@ -1,7 +1,12 @@
-from flask import jsonify, request, abort
+from flask import jsonify, request, abort, send_from_directory
 from .models import Producto
 from . import app
 from peewee import DoesNotExist  # Importa la excepción DoesNotExist desde peewee
+
+
+@app.route('/static/<path:path>')
+def send_static(path):
+    return send_from_directory('static', path)
 
 @app.route('/')
 def index():

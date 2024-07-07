@@ -1,5 +1,5 @@
 #importar flask, respuesta y codificacion a json
-from flask import Flask
+from flask import Flask, render_template, url_for
 import subprocess
 from peewee import MySQLDatabase 
 from dotenv import load_dotenv
