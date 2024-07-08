@@ -1,6 +1,8 @@
 from peewee import MySQLDatabase, AutoField, Model, CharField, FloatField, BooleanField, fn
 from dotenv import load_dotenv
 import os
+from app.models import User, Producto 
+
 
 # Cargar variables de entorno desde .env
 load_dotenv()
@@ -37,7 +39,12 @@ def create_and_populate_database():
         db.connect()
 
         # Crear las tablas si no existen
-        db.create_tables([Producto])
+        db.create_tables([Producto, User])
+
+     
+
+        # Crear usuario administrador
+     
         # Datos de productos a insertar
         productos_data = [
             {
@@ -151,7 +158,21 @@ def create_and_populate_database():
     finally:
         # Cerrar la conexión a la base de datos
         db.close()
+def create_admin_user():
+    try:
+        db.connect()
+        with db.atomic():
+            if not User.select().where(User.username == 'admin').exists():
+                admin = User(username='admin', is_admin=True)
+                admin.set_password('pasteleria24')  # Cambia 'admin_password' por la contraseña que prefieras
+                admin.save()
+        print('Usuario administrador creado correctamente.')
+    except Exception as e:
+        print(f'Error al crear el usuario administrador: {str(e)}')
+    finally:
+        db.close()
 
 # Llamar a la función para crear y poblar la base de datos
 if __name__ == '__main__':
     create_and_populate_database()
+    create_admin_user()

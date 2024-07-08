@@ -1,8 +1,8 @@
 from flask import jsonify, request, abort, send_from_directory
-from .models import Producto
-from . import app
+from .models import Producto, User 
+from . import app, login_manager
 from peewee import DoesNotExist  # Importa la excepción DoesNotExist desde peewee
-
+from flask_login import login_user, login_required, logout_user
 
 @app.route('/static/<path:path>')
 def send_static(path):
@@ -34,7 +34,7 @@ def get_producto(producto_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Ruta para crear un nuevo producto
+# Ruta para crear un nuevo producto (ruta protegida)
 @app.route('/api/productos', methods=['POST'])
 def create_producto():
     data = request.get_json()
@@ -44,7 +44,7 @@ def create_producto():
             descripcion=data['descripcion'],
             precio=data['precio'],
             disponible=data['disponible'],
-            imagen=data.get('imagen', "../static/img/Captura de pantalla 2024-03-17 201208.png")  # imagen es opcional, utiliza una imagen por defecto si no se proporciona
+            imagen=data.get('imagen', "Captura de pantalla 2024-03-17 201208.png")  # imagen es opcional, utiliza una imagen por defecto si no se proporciona
         )
         return jsonify({'id': nuevo_producto.id}), 201
     except KeyError as e:
@@ -52,7 +52,7 @@ def create_producto():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Ruta para actualizar un producto
+# Ruta para actualizar un producto (ruta protegida)
 @app.route('/api/productos/<int:producto_id>', methods=['PUT'])
 def update_producto(producto_id):
     data = request.get_json()
@@ -72,7 +72,7 @@ def update_producto(producto_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Ruta para eliminar un producto
+# Ruta para eliminar un producto (ruta protegida)
 @app.route('/api/productos/<int:producto_id>', methods=['DELETE'])
 def delete_producto(producto_id):
     try:
@@ -83,3 +83,32 @@ def delete_producto(producto_id):
         abort(404, description=f'Producto con id {producto_id} no encontrado')
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+#ruta de inicio de session
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    try:
+        user = User.get(User.username == username) # Busca el usuario por nombre de usuario
+    except DoesNotExist:
+        return jsonify({'message': 'usuario o contraseña incorrectos'}), 401
+
+    if user.check_password(password):
+        login_user(user)
+        return jsonify({'message': 'Inicio de session exitoso'}), 200
+    else:
+        return jsonify({'message': 'Usuario o Contraseña incorrectos'})
+    
+#ruta de cierre de sesion
+@app.route('/api/logout')
+@login_required
+def logout():
+    logout_user()
+    return jsonify({'message': 'sesion cerrada'}), 200
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get_by_id(user_id)
