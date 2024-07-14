@@ -1,4 +1,4 @@
-from peewee import MySQLDatabase, AutoField, Model, CharField, FloatField, BooleanField, fn
+from peewee import MySQLDatabase, AutoField, Model, CharField, FloatField, BooleanField,OperationalError, InterfaceError, fn
 from dotenv import load_dotenv
 import os
 from app.models import User, Producto 
@@ -35,6 +35,10 @@ class Producto(BaseModel):
 def create_and_populate_database():
     try:
         # Conectarse a la base de datos
+         # Verificar la conexión antes de realizar cualquier operación
+        if not db.is_closed():
+            db.close()
+        
         db.connect()
 
         # Crear las tablas si no existen
@@ -148,26 +152,40 @@ def create_and_populate_database():
             
         print('Base de datos creada y productos insertados correctamente.')
 
+    except (OperationalError, InterfaceError) as e:
+        print(f'Error al conectar o interactuar con la base de datos: {str(e)}')
+
     except Exception as e:
         print(f'Error al crear la base de datos: {str(e)}')
 
     finally:
         # Cerrar la conexión a la base de datos
-        db.close()
+        if not db.is_closed():
+            db.close()
 
 def create_admin_user():
     try:
+        if not db.is_closed():
+            db.close()
+
         db.connect()
+
         with db.atomic():
             if not User.select().where(User.username == 'admin').exists():
                 admin = User(username='admin', is_admin=True)
                 admin.set_password('pasteleria24')  # Cambia 'admin_password' por la contraseña que prefieras
                 admin.save()
         print('Usuario administrador creado correctamente.')
+    
+    except (OperationalError, InterfaceError) as e:
+        print(f'Error al conectar o interactuar con la base de datos: {str(e)}')
+
     except Exception as e:
         print(f'Error al crear el usuario administrador: {str(e)}')
     finally:
-        db.close()
+        # Cerrar la conexión a la base de datos
+        if not db.is_closed():
+            db.close()
 
 # Llamar a la función para crear y poblar la base de datos
 if __name__ == '__main__':
