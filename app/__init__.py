@@ -18,7 +18,7 @@ app.config['DEBUG'] = True
 CORS(app, supports_credentials=True)
 
 # Configuración de Flask-Login
-app.secret_key = 'admin1234'   # Necesario para la gestión de sesiones
+app.secret_key = os.getenv('SECRET_KEY')   # Necesario para la gestión de sesiones
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'  # Nombre de la vista de inicio de sesión
@@ -43,6 +43,8 @@ def before_request():
     wait_for_mysql()  # Esperar a que MySQL esté listo antes de conectar
 
 # Debug: Imprimir variables de entorno para verificación
+
+print(os.getenv('SECRET_KEY'))
 print(os.getenv('DB_NAME'))
 print(os.getenv('DB_USER'))
 print(os.getenv('DB_PASSWORD'))
