@@ -3,22 +3,18 @@ services:
     name: mysql
     plan: standard
     runtime: docker
-    disk:
-      name: mysql
-      mountPath: /var/lib/mysql
-      sizeGB: 10
     envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        value: paste2024
       - key: MYSQL_DATABASE
         value: pasteleria_db
       - key: MYSQL_USER
         value: root
       - key: MYSQL_PASSWORD
         value: paste2024
-      - key: MYSQL_ROOT_PASSWORD
-        value: paste2024
 
   - type: web
-    name: lya-pasteleria-api
+    name: pasteleria-api
     plan: free
     runtime: docker
     envVars:
@@ -29,6 +25,6 @@ services:
       - key: DB_PASSWORD
         value: paste2024
       - key: DB_HOST
-        value: mysql
+        value: mysql-server
       - key: DB_PORT
         value: "3306"
