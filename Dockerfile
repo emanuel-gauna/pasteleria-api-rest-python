@@ -1,5 +1,5 @@
 # Usa una imagen base de Python
-FROM python:3.12.4 
+FROM python:3.12.4-slim
 
 # Instalar wait-for-it
 RUN wget -O /usr/local/bin/wait-for-it.sh \
