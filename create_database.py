@@ -1,7 +1,7 @@
 from peewee import MySQLDatabase, AutoField, Model, CharField, FloatField, BooleanField,OperationalError, InterfaceError, fn
 from dotenv import load_dotenv
 import os
-from app.models import User, Producto 
+from app.models  import User, Producto 
 
 # Cargar variables de entorno desde .env
 load_dotenv()
@@ -12,7 +12,7 @@ db = MySQLDatabase(
     user=os.getenv('DB_USER'),
     password=os.getenv('DB_PASSWORD'),
     host=os.getenv('DB_HOST'),
-    port=int(os.getenv('DB_PORT')),
+    port=int(os.getenv('DB_PORT', '3306')),
 )
 
 # Definición del modelo Producto
