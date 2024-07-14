@@ -1,22 +1,39 @@
-# Exported from Render on 2024-07-14T18:07:34Z
-services:
-- type: web
-  name: pasteleria-api-rest-python
-  runtime: docker
-  repo: https://github.com/emanuel-gauna/pasteleria-api-rest-python
-  plan: free
-  envVars:
-  - key: DB_USER
-    sync: false
-  - key: DB_PORT
-    sync: false
-  - key: DB_PASSWORD
-    sync: false
-  - key: DB_NAME
-    sync: false
-  - key: DB_HOST
-    sync: false
-  region: oregon
-  dockerContext: .
-  dockerfilePath: ./Dockerfile
 version: "1"
+services:
+  - type: pserv
+    name: mysql
+    plan: standard
+    runtime: docker
+    disk:
+      name: mysql
+      mountPath: /var/lib/mysql
+      sizeGB: 10
+    envVars:
+      - key: MYSQL_DATABASE
+        value: pasteleria_db
+      - key: MYSQL_USER
+        value: root
+      - key: MYSQL_PASSWORD
+        value: paste2024
+      - key: MYSQL_ROOT_PASSWORD
+        value: paste2024
+
+  - type: web
+    name: pasteleria-api-rest-python
+    plan: free
+    runtime: docker
+    repo: https://github.com/emanuel-gauna/pasteleria-api-rest-python
+    envVars:
+      - key: DB_NAME
+        value: pasteleria_db
+      - key: DB_USER
+        value: root
+      - key: DB_PASSWORD
+        value: paste2024
+      - key: DB_HOST
+        value: mysql-server
+      - key: DB_PORT
+        value: "3306"
+    region: oregon
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
