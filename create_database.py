@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 import os
 from app.models import User, Producto 
 
-
 # Cargar variables de entorno desde .env
 load_dotenv()
 
@@ -41,10 +40,7 @@ def create_and_populate_database():
         # Crear las tablas si no existen
         db.create_tables([Producto, User])
 
-     
-
         # Crear usuario administrador
-     
         # Datos de productos a insertar
         productos_data = [
             {
@@ -158,6 +154,7 @@ def create_and_populate_database():
     finally:
         # Cerrar la conexión a la base de datos
         db.close()
+
 def create_admin_user():
     try:
         db.connect()

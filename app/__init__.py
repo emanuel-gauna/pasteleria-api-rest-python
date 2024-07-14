@@ -1,5 +1,5 @@
 #importar flask, respuesta y codificacion a json
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, jsonify
 import subprocess
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from peewee import MySQLDatabase 
@@ -34,7 +34,7 @@ db = MySQLDatabase(
 
 # Función para esperar a que MySQL esté listo
 def wait_for_mysql():
-    wait_cmd = ['wait-for-it.sh', '--host=' + os.getenv('DB_HOST'), '--port=' + os.getenv('DB_PORT'), '--timeout=60']
+    wait_cmd = ['wait-for-it.sh', '--host=' + os.getenv('DB_HOST'), '--port=' + os.getenv('DB_PORT'), '--timeout=120']
     subprocess.run(wait_cmd, check=True)
 
 # Hook de Flask para esperar a que MySQL esté listo antes de cada solicitud
