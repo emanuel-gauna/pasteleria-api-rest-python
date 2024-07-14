@@ -1,8 +1,11 @@
 # Usa una imagen base de Python
 FROM python:3.12.4-slim
 
-# Instalar wait-for-it
-RUN wget -O /usr/local/bin/wait-for-it.sh \
+# Instalar wget y wait-for-it
+RUN apt-get update && \
+    apt-get install -y wget && \
+    rm -rf /var/lib/apt/lists/* && \
+    wget -O /usr/local/bin/wait-for-it.sh \
     https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
     && chmod +x /usr/local/bin/wait-for-it.sh
 
@@ -25,4 +28,4 @@ ENV FLASK_APP=app
 EXPOSE 5000
 
 # Define el comando por defecto para ejecutar la aplicación
-CMD ["wait-for-it.sh", "mysql-server:3306", "--timeout=180" ,"--", "sh", "-c", "python create_database.py && python update_image_paths.py && flask run --host=0.0.0.0 --port=5000"]
+CMD ["wait-for-it.sh", "mysql-server:3306", "--timeout=180", "--", "sh", "-c", "python create_database.py && python update_image_paths.py && flask run --host=0.0.0.0 --port=5000"]
