@@ -34,7 +34,7 @@ db = MySQLDatabase(
 
 # Función para esperar a que MySQL esté listo
 def wait_for_mysql():
-    wait_cmd = ['wait-for-it.sh', '--host=' + os.getenv('DB_HOST'), '--port=' + os.getenv('DB_PORT'), '--timeout=180']
+    wait_cmd = ['wait-for-it.sh', '--host=' + os.getenv('DB_HOST'), '--port=' + os.getenv('DB_PORT'), '--timeout=300']
     subprocess.run(wait_cmd, check=True)
 
 # Hook de Flask para esperar a que MySQL esté listo antes de cada solicitud
