@@ -11,7 +11,7 @@ import os
 load_dotenv()
 
 # Inicializar la aplicación Flask
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static")
 app.config['DEBUG'] = True
 
 # Configurar CORS para permitir solicitudes desde cualquier origen

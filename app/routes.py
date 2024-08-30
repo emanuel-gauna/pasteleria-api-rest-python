@@ -17,7 +17,7 @@ def index():
 def get_productos():
     try:
         productos = Producto.select()
-        productos_list = [{'id': producto.id, 'nombre': producto.nombre, 'descripcion': producto.descripcion, 'precio': producto.precio, 'disponible': producto.disponible, 'imagen': producto.imagen} for producto in productos]
+        productos_list = [{'id': producto.id, 'nombre': producto.nombre, 'descripcion': producto.descripcion, 'precio': producto.precio, 'disponible': producto.disponible, 'imagen': f'/static/img/{producto.imagen}'} for producto in productos]
         return jsonify(productos_list)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -28,7 +28,7 @@ def get_producto(producto_id):
     try:
         producto = Producto.get_by_id(producto_id)
         return jsonify({'id': producto.id, 'nombre': producto.nombre, 'descripcion': producto.descripcion,
-                        'precio': producto.precio, 'disponible': producto.disponible, 'imagen': producto.imagen})
+                        'precio': producto.precio, 'disponible': producto.disponible, 'imagen': f'static/img/{producto.imagen}'})
     except DoesNotExist:
         abort(404, description=f'Producto con id {producto_id} no encontrado')
     except Exception as e:
@@ -62,7 +62,7 @@ def update_producto(producto_id):
         producto.descripcion = data.get('descripcion', producto.descripcion)
         producto.precio = data.get('precio', producto.precio)
         producto.disponible = data.get('disponible', producto.disponible)
-        producto.imagen = data.get('imagen', producto.imagen)
+        producto.imagen = data.get('imagen', f'/static/img/{producto.imagen}')
         producto.save()
         return jsonify({'message': f'Producto {producto_id} actualizado correctamente'}), 200
     except DoesNotExist:
