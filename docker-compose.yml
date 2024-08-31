@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  mysql-server:
+  mysql:
     image: mysql:latest
     container_name: mysql-server
     environment:
@@ -22,17 +22,18 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      - mysql-server
-    command: bash -c "./wait-for-it.sh mysql-server:3306 --timeout=300 -- sh -c 'python create_database.py  && flask run --host=0.0.0.0'"
+      - mysql
+    command: bash -c "wait-for-it.sh mysql-server:3306 --timeout=180 -- sh -c 'python create_database.py  && flask run --host=0.0.0.0'"
     environment:
       FLASK_ENV: development
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: ${DB_HOST}
+      DB_HOST: ${DB_HOST}  # Asegúrate de usar el nombre del servicio como host
       DB_PORT: 3306
     volumes:
       - .:/app
+      - ./static:/app/static
     networks:
       - app-network
 
