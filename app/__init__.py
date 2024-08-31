@@ -16,6 +16,7 @@ app.config['DEBUG'] = True
 
 # Configurar CORS para permitir solicitudes desde cualquier origen
 CORS(app, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": "https://emanuel-gauna.github.io"}})
 
 # Configuración de Flask-Login
 app.secret_key = os.getenv('SECRET_KEY')   # Necesario para la gestión de sesiones
