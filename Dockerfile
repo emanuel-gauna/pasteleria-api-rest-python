@@ -1,4 +1,4 @@
-# Usa una imagen base de Pyth# Usa una imagen base de Python
+# Usa una imagen base de Python
 FROM python:3.12.4-slim
 
 # Instalar wget, pkg-config y dependencias necesarias para psycopg2
@@ -28,4 +28,4 @@ ENV FLASK_APP=app
 EXPOSE 5000
 
 # Define el comando por defecto para ejecutar la aplicación
-CMD ["wait-for-it.sh", "aws-0-us-west-1.pooler.supabase.com:6543", "--timeout=180", "--", "sh", "-c", "python create_database.py && python update_image_paths.py && flask run --host=0.0.0.0"]
+CMD ["wait-for-it.sh", "postgres-server:5432", "--timeout=180", "--", "sh", "-c", "python create_database.py && flask run --host=0.0.0.0"]

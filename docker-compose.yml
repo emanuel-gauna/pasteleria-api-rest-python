@@ -5,9 +5,9 @@ services:
     image: postgres:latest
     container_name: postgres-server
     environment:
-      POSTGRES_DB: ${DB_NAME}            # Creamos la base de datos especificada
-      POSTGRES_USER: ${DB_USER}          # Definimos el usuario de PostgreSQL
-      POSTGRES_PASSWORD: ${DB_PASSWORD}  # Definimos la contraseña del usuario
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -16,7 +16,7 @@ services:
       - app-network
 
   web:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     container_name: flask-app
@@ -30,8 +30,8 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: postgres-server  # Nombre del contenedor de PostgreSQL
-      DB_PORT: 5432              # Puerto de PostgreSQL
+      DB_HOST: postgres-server
+      DB_PORT: 5432
     volumes:
       - .:/app
       - ./static:/app/static

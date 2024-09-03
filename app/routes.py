@@ -1,6 +1,6 @@
 from flask import jsonify, request, abort, send_from_directory
-from .models import Producto, User
-from . import app, login_manager
+from app.models import Producto, User
+from app import app, login_manager
 from peewee import DoesNotExist
 from flask_login import login_user, login_required, logout_user, current_user
 

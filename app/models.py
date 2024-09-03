@@ -1,5 +1,5 @@
 from peewee import AutoField, Model, CharField, DecimalField, BooleanField
-from . import db  # Asegúrate de importar la conexión a la base de datos adecuada
+from app import db  # Asegúrate de importar la conexión a la base de datos adecuada
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -20,8 +20,8 @@ class Producto(BaseModel):
 
 class User(BaseModel, UserMixin):
     id = AutoField(primary_key=True)
-    username = CharField(max_length=50, unique=True)
-    password_hash = CharField(max_length=128)
+    username = CharField(max_length=128)
+    password_hash = CharField(max_length=256)  # Aumentar el tamaño para hashes largos
     is_admin = BooleanField(default=False)
 
     def set_password(self, password):
