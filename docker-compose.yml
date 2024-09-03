@@ -1,16 +1,17 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: mysql:latest
-    container_name: mysql-server
+  postgres:
+    image: postgres:latest
+    container_name: postgres-server
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}  # Definimos la contraseña del usuario root
-      MYSQL_DATABASE: ${DB_NAME}          # Creamos la base de datos especificada
+      POSTGRES_DB: ${DB_NAME}            # Creamos la base de datos especificada
+      POSTGRES_USER: ${DB_USER}          # Definimos el usuario de PostgreSQL
+      POSTGRES_PASSWORD: ${DB_PASSWORD}  # Definimos la contraseña del usuario
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - app-network
 
@@ -22,15 +23,15 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      - mysql
-    command: bash -c "wait-for-it.sh mysql-server:3306 --timeout=180 -- sh -c 'python create_database.py  && flask run --host=0.0.0.0'"
+      - postgres
+    command: bash -c "wait-for-it.sh postgres-server:5432 --timeout=180 -- sh -c 'python create_database.py && flask run --host=0.0.0.0'"
     environment:
       FLASK_ENV: development
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: ${DB_HOST}  # Asegúrate de usar el nombre del servicio como host
-      DB_PORT: 3306
+      DB_HOST: postgres-server  # Nombre del contenedor de PostgreSQL
+      DB_PORT: 5432              # Puerto de PostgreSQL
     volumes:
       - .:/app
       - ./static:/app/static
@@ -42,4 +43,4 @@ networks:
     driver: bridge
 
 volumes:
-  mysql_data:
+  postgres_data:

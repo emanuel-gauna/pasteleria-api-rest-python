@@ -1,8 +1,8 @@
 from flask import jsonify, request, abort, send_from_directory
-from .models import Producto, User 
+from .models import Producto, User
 from . import app, login_manager
-from peewee import DoesNotExist  # Importa la excepción DoesNotExist desde peewee
-from flask_login import login_user, login_required, logout_user
+from peewee import DoesNotExist
+from flask_login import login_user, login_required, logout_user, current_user
 
 @app.route('/static/<path:path>')
 def send_static(path):
@@ -17,7 +17,16 @@ def index():
 def get_productos():
     try:
         productos = Producto.select()
-        productos_list = [{'id': producto.id, 'nombre': producto.nombre, 'descripcion': producto.descripcion, 'precio': producto.precio, 'disponible': producto.disponible, 'imagen': f'/static/img/{producto.imagen}'} for producto in productos]
+        productos_list = [
+            {
+                'id': producto.id,
+                'nombre': producto.nombre,
+                'descripcion': producto.descripcion,
+                'precio': str(producto.precio),  # Convertir a cadena para evitar problemas con JSON
+                'disponible': producto.disponible,
+                'imagen': f'/static/img/{producto.imagen}'
+            } for producto in productos
+        ]
         return jsonify(productos_list)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -27,8 +36,14 @@ def get_productos():
 def get_producto(producto_id):
     try:
         producto = Producto.get_by_id(producto_id)
-        return jsonify({'id': producto.id, 'nombre': producto.nombre, 'descripcion': producto.descripcion,
-                        'precio': producto.precio, 'disponible': producto.disponible, 'imagen': f'static/img/{producto.imagen}'})
+        return jsonify({
+            'id': producto.id,
+            'nombre': producto.nombre,
+            'descripcion': producto.descripcion,
+            'precio': str(producto.precio),  # Convertir a cadena para evitar problemas con JSON
+            'disponible': producto.disponible,
+            'imagen': f'/static/img/{producto.imagen}'
+        })
     except DoesNotExist:
         abort(404, description=f'Producto con id {producto_id} no encontrado')
     except Exception as e:
@@ -36,6 +51,7 @@ def get_producto(producto_id):
 
 # Ruta para crear un nuevo producto (ruta protegida)
 @app.route('/api/productos', methods=['POST'])
+@login_required
 def create_producto():
     data = request.get_json()
     try:
@@ -44,7 +60,7 @@ def create_producto():
             descripcion=data['descripcion'],
             precio=data['precio'],
             disponible=data['disponible'],
-            imagen=data.get('imagen', "Captura de pantalla 2024-03-17 201208.png")  # imagen es opcional, utiliza una imagen por defecto si no se proporciona
+            imagen=data.get('imagen', "Captura de pantalla 2024-03-17 201208.png")  # Imagen opcional
         )
         return jsonify({'id': nuevo_producto.id}), 201
     except KeyError as e:
@@ -54,6 +70,7 @@ def create_producto():
 
 # Ruta para actualizar un producto (ruta protegida)
 @app.route('/api/productos/<int:producto_id>', methods=['PUT'])
+@login_required
 def update_producto(producto_id):
     data = request.get_json()
     try:
@@ -62,7 +79,7 @@ def update_producto(producto_id):
         producto.descripcion = data.get('descripcion', producto.descripcion)
         producto.precio = data.get('precio', producto.precio)
         producto.disponible = data.get('disponible', producto.disponible)
-        producto.imagen = data.get('imagen', f'/static/img/{producto.imagen}')
+        producto.imagen = data.get('imagen', producto.imagen)
         producto.save()
         return jsonify({'message': f'Producto {producto_id} actualizado correctamente'}), 200
     except DoesNotExist:
@@ -74,6 +91,7 @@ def update_producto(producto_id):
 
 # Ruta para eliminar un producto (ruta protegida)
 @app.route('/api/productos/<int:producto_id>', methods=['DELETE'])
+@login_required
 def delete_producto(producto_id):
     try:
         producto = Producto.get_by_id(producto_id)
@@ -84,7 +102,7 @@ def delete_producto(producto_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-#ruta de inicio de session
+# Ruta de inicio de sesión
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -92,22 +110,22 @@ def login():
     password = data.get('password')
 
     try:
-        user = User.get(User.username == username) # Busca el usuario por nombre de usuario
+        user = User.get(User.username == username)
     except DoesNotExist:
-        return jsonify({'message': 'usuario o contraseña incorrectos'}), 401
+        return jsonify({'message': 'Usuario o contraseña incorrectos'}), 401
 
     if user.check_password(password):
         login_user(user)
-        return jsonify({'message': 'Inicio de session exitoso'}), 200
+        return jsonify({'message': 'Inicio de sesión exitoso'}), 200
     else:
-        return jsonify({'message': 'Usuario o Contraseña incorrectos'})
-    
-#ruta de cierre de sesion
+        return jsonify({'message': 'Usuario o contraseña incorrectos'}), 401
+
+# Ruta de cierre de sesión
 @app.route('/api/logout')
 @login_required
 def logout():
     logout_user()
-    return jsonify({'message': 'sesion cerrada'}), 200
+    return jsonify({'message': 'Sesión cerrada'}), 200
 
 @login_manager.user_loader
 def load_user(user_id):

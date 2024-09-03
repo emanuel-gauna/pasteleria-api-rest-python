@@ -2,7 +2,7 @@
 from flask import Flask, render_template, url_for, jsonify
 import subprocess
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from peewee import MySQLDatabase 
+from peewee import PostgresqlDatabase  # Cambiado de MySQLDatabase a PostgresqlDatabase
 from dotenv import load_dotenv
 from flask_cors import CORS 
 import os 
@@ -24,27 +24,26 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'  # Nombre de la vista de inicio de sesión
 
-# Configuración de la base de datos MySQL utilizando peewee y variables de entorno
-db = MySQLDatabase(
+# Configuración de la base de datos PostgreSQL utilizando peewee y variables de entorno
+db = PostgresqlDatabase(
     os.getenv('DB_NAME'),
     user=os.getenv('DB_USER'),
     password=os.getenv('DB_PASSWORD'),
-    host=os.getenv('DB_HOST', 'mysql'),
-    port=int(os.getenv('DB_PORT', '3306')),
+    host=os.getenv('DB_HOST', 'localhost'),
+    port=int(os.getenv('DB_PORT', '5432')),
 )
 
-# Función para esperar a que MySQL esté listo
-def wait_for_mysql():
+# Función para esperar a que PostgreSQL esté listo
+def wait_for_postgres():
     wait_cmd = ['wait-for-it.sh', '--host=' + os.getenv('DB_HOST'), '--port=' + os.getenv('DB_PORT'), '--timeout=300']
     subprocess.run(wait_cmd, check=True)
 
-# Hook de Flask para esperar a que MySQL esté listo antes de cada solicitud
+# Hook de Flask para esperar a que PostgreSQL esté listo antes de cada solicitud
 @app.before_request
 def before_request():
-    wait_for_mysql()  # Esperar a que MySQL esté listo antes de conectar
+    wait_for_postgres()  # Esperar a que PostgreSQL esté listo antes de conectar
 
 # Debug: Imprimir variables de entorno para verificación
-
 print(os.getenv('SECRET_KEY'))
 print(os.getenv('DB_NAME'))
 print(os.getenv('DB_USER'))
