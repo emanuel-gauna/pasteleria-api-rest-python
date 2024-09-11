@@ -27,7 +27,7 @@ def get_productos():
                 'descripcion': producto.descripcion,
                 'precio': str(producto.precio),  # Convertir a cadena para evitar problemas con JSON
                 'disponible': producto.disponible,
-                'imagen': f'/static/img/{producto.imagen}'
+                'imagen': f'./static/img/{producto.imagen}'
             } for producto in productos
         ]
         return jsonify(productos_list)
