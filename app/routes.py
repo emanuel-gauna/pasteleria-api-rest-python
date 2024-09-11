@@ -3,6 +3,9 @@ from app.models import Producto, User
 from app import app, login_manager
 from peewee import DoesNotExist
 from flask_login import login_user, login_required, logout_user, current_user
+from flask_cors import CORS
+
+CORS(app, origins=["https://emanuel-gauna.github.io"])
 
 @app.route('/static/<path:path>')
 def send_static(path):

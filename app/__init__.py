@@ -3,6 +3,7 @@ from flask_login import LoginManager
 from peewee import PostgresqlDatabase
 import os
 from dotenv import load_dotenv
+from flask_cors import CORS
 
 # Cargar variables de entorno desde el archivo .env
 load_dotenv()
@@ -18,6 +19,7 @@ db = PostgresqlDatabase(
 
 # Crear la instancia de la aplicación Flask
 app = Flask(__name__)
+CORS(app)
 app.config.from_object('app.config.Config')
 
 # Inicializar LoginManager
