@@ -9,14 +9,14 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "5432:5432"
+      - "6543:5432" # Cambia el puerto aquí si es necesario
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - app-network
 
   web:
-    build:
+    build: 
       context: .
       dockerfile: Dockerfile
     container_name: flask-app
@@ -30,8 +30,9 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: postgres-server
-      DB_PORT: 5432
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      SECRET_KEY: ${SECRET_KEY}
     volumes:
       - .:/app
       - ./static:/app/static

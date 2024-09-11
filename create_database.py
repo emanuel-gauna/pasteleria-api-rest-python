@@ -1,4 +1,4 @@
-from peewee import PostgresqlDatabase, AutoField, Model, CharField, DecimalField, BooleanField, OperationalError, InterfaceError
+from peewee import PostgresqlDatabase, AutoField, Model, CharField, FloatField, BooleanField, OperationalError, InterfaceError
 from dotenv import load_dotenv
 import os
 from app.models import User, Producto  # Asegúrate de que User esté definido en app/models
@@ -24,7 +24,7 @@ class Producto(BaseModel):
     id = AutoField(primary_key=True)
     nombre = CharField()
     descripcion = CharField()
-    precio = DecimalField(max_digits=10, decimal_places=2)  # Cambiado a DecimalField para precios
+    precio = FloatField()
     disponible = BooleanField()
     imagen = CharField()
 
@@ -42,9 +42,97 @@ def create_and_populate_database():
 
         # Datos de productos a insertar
         productos_data = [
-            # Ejemplo de datos de productos
-            {'nombre': 'Pastel de Chocolate', 'descripcion': 'Delicioso pastel de chocolate', 'precio': 20.0, 'disponible': True, 'imagen': 'chocolate.jpg'},
-            # Agrega más productos aquí
+            {
+                'nombre': "Muffins varios",
+                'descripcion': "Deliciosos muffins horneados con arándanos frescos y una pizca de canela de Arándanos, banana, o Frutos Rojos, chips de chocolate y rellenos de dulce de leche (precio por unidad)",
+                'precio': 600.00,
+                'disponible': True,
+                'imagen': "Muffins de coco y dulce de leche.jpg"
+            },
+            {
+                'nombre': "Budín de Limón y Chocolate con  Nuez",
+                'descripcion': "Budín esponjoso con el sabor cítrico de la naranja y un glaseado de azúcar, de nuez y bañado en  chocolate (precio por unidad)",
+                'precio': 3000,
+                'disponible': True,
+                'imagen': "budin de limon y amapolas , budin de chocolate y nuez.png"
+            },
+            {
+                'nombre': "Escones de Queso",
+                'descripcion': "Escones de queso salados, para acompañar con fiambres o solos (precio por unidad)",
+                'precio': 100,
+                'disponible': False,
+                'imagen': "scones de queso.png"
+            },
+            {
+                'nombre': "Tarta de Manzana",
+                'descripcion': "Tarta crujiente con una capa de manzanas frescas y un toque de canela, perfecta para cualquier ocasión.",
+                'precio': 6000,
+                'disponible': True,
+                'imagen': "tarta-manzana.jpg"
+            },
+            {
+                'nombre': "Roll de Canela",
+                'descripcion': "Rolles de canela dulces con azucar negra por 6 unidades, ideales para la merienda o desayuno",
+                'precio': 3500,
+                'disponible': True,
+                'imagen': "Roll-canela.jpg"
+            },
+            {
+                'nombre': "Pasta Frola",
+                'descripcion': "Clásica Pastaflora de dulce de membrillo, batata, y dulce de leche",
+                'precio': 5000,
+                'disponible': True,
+                'imagen': "pastafrola.jpg"
+            },
+            {
+                'nombre': "Medialunas",
+                'descripcion': "medialunas de manteca y de grasa, ideal para desayuno y merienda (precio por docena)",
+                'precio': 4000,
+                'disponible': True,
+                'imagen': "medialunas.jpg"
+            },
+            {
+                'nombre': "Rosca de Reyes",
+                'descripcion': "Rosca dulce tradicional decorada con frutas confitadas y azúcar glase, típica de la celebración del Día de Reyes o Pascuas.",
+                'precio': 4500,
+                'disponible': False,
+                'imagen': "rosca-reyes.jpg"
+            },
+            {
+                'nombre': "Cookies",
+                'descripcion': "Galletas caseras dulces , crujientes por fuera y suaves por dentro, ideales para acompañar un café con chispas de chocolate. (precio por 250GR)",
+                'precio': 1000,
+                'disponible': True,
+                'imagen': "cookies.jpg"
+            },
+            {
+                'nombre': "Chipá",
+                'descripcion': "Galletas saladas horneadas con una pizca de sal marina y hierbas frescas, perfectas para acompañar un queso.(precio por 250 gr)",
+                'precio': 2000,
+                'disponible': True,
+                'imagen': "chipá.jpg"
+            },
+            {
+                'nombre': "Alfajores de Maizena",
+                'descripcion': "Dulces alfajores rellenos de dulce de leche y cubiertos con coco rallado (precio por unidad)",
+                'precio': 250,
+                'disponible': True,
+                'imagen': "IMG-20240505-WA0028.jpg"
+            },
+            {
+                'nombre': "Shots - chocotorta- cheesecake",
+                'descripcion': "shots de postres dedicados para ocaciones especiales cheesecake - chocotorta - red velvet (precio por unidad)",
+                'precio': 1000,
+                'disponible': False,
+                'imagen': "shots-chocotorta.jpg"
+            },
+            {
+                'nombre': "Desayunos dedicados",
+                'descripcion': "Desayunos dedicados para ocaciones especiales. consta de: 2 rodajas de budin marmolado, cake de manzana, porcion de torta, 2 pebetes de jyq, 3 chipacitos, 3 galletas glase, un jugo individual, infusiones varias (precio a convenir)",
+                'precio': 0,
+                'disponible': False,
+                'imagen': "desayuno.jpg"
+            },
         ]
 
         # Insertar cada producto en la base de datos
