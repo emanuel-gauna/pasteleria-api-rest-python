@@ -7,6 +7,8 @@ from flask_cors import CORS
 
 CORS(app, origins=["https://emanuel-gauna.github.io"])
 
+BASE_IMG_URL = 'https://emanuel-gauna.github.io/LyA-pasteleria/static/img/'
+
 @app.route('/static/<path:path>')
 def send_static(path):
     return send_from_directory('static', path)
@@ -27,7 +29,7 @@ def get_productos():
                 'descripcion': producto.descripcion,
                 'precio': str(producto.precio),  # Convertir a cadena para evitar problemas con JSON
                 'disponible': producto.disponible,
-                'imagen': f'./static/img/{producto.imagen}'
+                'imagen': f'{BASE_IMG_URL}{producto.imagen}'
             } for producto in productos
         ]
         return jsonify(productos_list)
@@ -45,7 +47,7 @@ def get_producto(producto_id):
             'descripcion': producto.descripcion,
             'precio': str(producto.precio),  # Convertir a cadena para evitar problemas con JSON
             'disponible': producto.disponible,
-            'imagen': f'/static/img/{producto.imagen}'
+            'imagen': f'{BASE_IMG_URL}{producto.imagen}'
         })
     except DoesNotExist:
         abort(404, description=f'Producto con id {producto_id} no encontrado')

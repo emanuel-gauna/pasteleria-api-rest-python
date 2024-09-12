@@ -47,21 +47,21 @@ def create_and_populate_database():
                 'descripcion': "Deliciosos muffins horneados con arándanos frescos y una pizca de canela de Arándanos, banana, o Frutos Rojos, chips de chocolate y rellenos de dulce de leche (precio por unidad)",
                 'precio': 600.00,
                 'disponible': True,
-                'imagen': "Muffins de coco y dulce de leche.jpg"
+                'imagen': "Muffins_de_coco_y_dulce_de_leche.jpg"
             },
             {
                 'nombre': "Budín de Limón y Chocolate con  Nuez",
                 'descripcion': "Budín esponjoso con el sabor cítrico de la naranja y un glaseado de azúcar, de nuez y bañado en  chocolate (precio por unidad)",
                 'precio': 3000,
                 'disponible': True,
-                'imagen': "budin de limon y amapolas , budin de chocolate y nuez.png"
+                'imagen': "budin_de_limon_y_amapolas_budin_de_chocolate_y_nuez.png"
             },
             {
                 'nombre': "Escones de Queso",
                 'descripcion': "Escones de queso salados, para acompañar con fiambres o solos (precio por unidad)",
                 'precio': 100,
                 'disponible': False,
-                'imagen': "scones de queso.png"
+                'imagen': "scones_de_queso.png"
             },
             {
                 'nombre': "Tarta de Manzana",
