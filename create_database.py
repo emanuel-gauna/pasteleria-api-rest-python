@@ -47,7 +47,7 @@ def create_and_populate_database():
                 'descripcion': "Deliciosos muffins horneados con arándanos frescos y una pizca de canela de Arándanos, banana, o Frutos Rojos, chips de chocolate y rellenos de dulce de leche (precio por unidad)",
                 'precio': 600.00,
                 'disponible': True,
-                'imagen': "Muffins_de_coco_y_dulce_de_leche.jpg"
+                'imagen':"Muffins_de_coco_y_dulce_de_leche.jpg"
             },
             {
                 'nombre': "Budín de Limón y Chocolate con  Nuez",
