@@ -1,4 +1,5 @@
-from peewee import AutoField, Model, CharField, DecimalField, BooleanField
+from peewee import AutoField, Model, CharField, DecimalField, BooleanField, ForeignKeyField, IntegerField,FloatField, DateTimeField
+from datetime import datetime
 from app import db  # Asegúrate de importar la conexión a la base de datos adecuada
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -33,3 +34,14 @@ class User(BaseModel, UserMixin):
 
     class Meta:
         table_name = 'users'
+
+class Carrito(Model):
+    user = ForeignKeyField(User, backref='carritos', on_delete='CASCADE')
+    producto = ForeignKeyField(Producto, backref='carritos', on_delete='CASCADE')
+    cantidad = IntegerField(default=1)
+    total = FloatField()
+    fecha_creacion = DateTimeField(default=datetime.now)
+
+    class Meta:
+        table_name = 'carrito'
+

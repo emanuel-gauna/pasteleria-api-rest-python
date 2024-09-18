@@ -1,5 +1,5 @@
 from flask import jsonify, request, abort, send_from_directory
-from app.models import Producto, User
+from app.models import Producto, User, Carrito
 from app import app, login_manager
 from peewee import DoesNotExist
 from flask_login import login_user, login_required, logout_user, current_user
@@ -106,7 +106,34 @@ def delete_producto(producto_id):
         abort(404, description=f'Producto con id {producto_id} no encontrado')
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+#agregar productos al carrito de compras
+@app.route('/api/carrito/agregar', method=['POST'])
+@login_required
+def agregar_carrito():
+    data = request.get_json()
+    try:
+        producto_id = data['producto_id']
+        cantidad = data['cantidad', 1]
 
+        producto = Producto.get_by_id(producto_id)
+        total = producto.precio * cantidad
+
+        Carrito.create(
+            user = current_user.id,
+            producto = producto_id,
+            cantidad = cantidad,
+            total = total
+        )
+        return jsonify({'message': f'Producto {producto.nombre} agregado al carrito'}), 200
+    except DoesNotExist:
+        abort(404, description=f'Producto con id {producto_id} no encontrado')
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+#eliminar pproductos del carrito
+""" @app.route('/api/carrito/eliminar/<int:carrito_id>', method=['POST'])
+ """
 # Ruta de inicio de sesión
 @app.route('/api/login', methods=['POST'])
 def login():

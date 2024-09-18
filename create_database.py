@@ -137,7 +137,10 @@ def create_and_populate_database():
 
         # Insertar cada producto en la base de datos
         for producto_data in productos_data:
-            Producto.create(**producto_data)
+            #verificar si ya existen los productos con el mismo nombre
+            producto_existente = Producto.get_or_none(Producto.nombre == producto_data['nombre'])
+            if not producto_existente:
+                Producto.create(**producto_data)
 
         print('Base de datos creada y productos insertados correctamente.')
 
