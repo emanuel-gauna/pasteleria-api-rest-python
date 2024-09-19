@@ -108,32 +108,67 @@ def delete_producto(producto_id):
         return jsonify({'error': str(e)}), 500
     
 #agregar productos al carrito de compras
-@app.route('/api/carrito/agregar', method=['POST'])
-@login_required
-def agregar_carrito():
-    data = request.get_json()
-    try:
-        producto_id = data['producto_id']
-        cantidad = data['cantidad', 1]
+@app.route('/api/carrito/agregar', method=['POST'])#ruta
+@login_required # login requerido
+def agregar_carrito(): # funcion que se ejecuta cuando se accede a la ruta
+    data = request.get_json() # almacenamos los datos de la solicitud en formato json
+    try: #bloque try para manejar posibles excepciones durante la ejecucion del codigo
+        producto_id = data['producto_id'] #extraemos el producto_id en la variable
+        cantidad = data.get('cantidad', 1) #extraemos la cantidad del producto a agregar por defecto sera 1
 
-        producto = Producto.get_by_id(producto_id)
-        total = producto.precio * cantidad
+        producto = Producto.get_by_id(producto_id)#busca en la BD el producto con el id expecificado
+        
+        if not producto.disponible:#verificar si el producto esta disponible
+            return jsonify({'error': 'El producto no esta disponible'}), 400 
+        
+        total = producto.precio * cantidad # calculo para sacar el total multiplicando el precio del producto por la cantidad indicada
 
-        Carrito.create(
-            user = current_user.id,
-            producto = producto_id,
-            cantidad = cantidad,
-            total = total
+        Carrito.create(#funcion de crear una nueva entrada en la tabla de carrito
+            user = current_user.id, #asocia el producto al carrito del usuario autenticado por flask login
+            producto = producto, #asignamos el producto de la BD
+            cantidad = cantidad, #asignamos la cantidad del producto
+            total = total #almacena el total calculado
         )
-        return jsonify({'message': f'Producto {producto.nombre} agregado al carrito'}), 200
-    except DoesNotExist:
-        abort(404, description=f'Producto con id {producto_id} no encontrado')
+        return jsonify({'message': f'Producto {producto.nombre} agregado al carrito'}), 201
+    #respuesta para el cliente en json
+    except DoesNotExist: # si ocurre una excepcion que el producto no existe
+        return jsonify({'error':f'Producto con id {producto_id} no encontrado'}), 404
+    except Exception as e: #captura cualquier otra excepción devolviendo error del servidor
+        return jsonify({'error': str(e)}), 500
+
+#eliminar productos del carrito
+@app.route('/api/carrito/eliminar/<int:carrito_id>', method=['POST'])#decoradores de ruta
+@login_required #decorador de  login requerido
+def eliminar_carrito(carrito_id):#metodo para eliminar del carrito
+    try:
+        carrito_item = Carrito.get_by_id(carrito_id) #de la clase carrito filtar por su id
+        carrito_item.delete_instance()#elimina el registro de la base de datos
+        return jsonify({'message': f'Producto eliminado del carrito'}), 200
+    
+    except DoesNotExist: # a menos que no exista
+        return jsonify({'error': 'Producto no encontrado en el carrito'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-#eliminar pproductos del carrito
-""" @app.route('/api/carrito/eliminar/<int:carrito_id>', method=['POST'])
- """
+#Ruta para listar los productos en el carrito
+@app.route('/api/carrito/listar', methods=['GET'])#decorador de ruta metodo "get"
+@login_required # decorador de usuario autenticado 
+def listar_carrito(): #funcion que se ejecuta al acceder a la ruta
+    try:
+        carrito_items = Carrito.select().where(Carrito.user == current_user.id)
+        #selecciona los registros de la tabla carrito. donde el campo user del carrito sea igual al id del usuario actualmente autenticado
+        productos = [
+            {
+                'producto_id': item.producto.id,
+                'nombre': item.producto.nombre,
+                'cantidad': item.cantidad,
+                'total': item.total
+            } for item in carrito_items
+        ]
+        return jsonify(productos), 200
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 # Ruta de inicio de sesión
 @app.route('/api/login', methods=['POST'])
 def login():
