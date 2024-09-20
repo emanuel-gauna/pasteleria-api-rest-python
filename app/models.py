@@ -21,9 +21,9 @@ class Producto(BaseModel):
 
 class User(BaseModel, UserMixin):
     id = AutoField(primary_key=True)
-    username = CharField(max_length=128)
+    username = CharField(max_length=128, unique=True)
     password_hash = CharField(max_length=256)  # Aumentar el tamaño para hashes largos
-    is_admin = BooleanField(default=False)
+    role = CharField(default='cliente') #nuevo campo para el rol de usuario
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

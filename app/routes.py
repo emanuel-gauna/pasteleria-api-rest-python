@@ -4,6 +4,7 @@ from app import app, login_manager
 from peewee import DoesNotExist
 from flask_login import login_user, login_required, logout_user, current_user
 from flask_cors import CORS
+from utils import role_required 
 
 CORS(app, origins=["https://emanuel-gauna.github.io"])
 
@@ -57,6 +58,7 @@ def get_producto(producto_id):
 # Ruta para crear un nuevo producto (ruta protegida)
 @app.route('/api/productos', methods=['POST'])
 @login_required
+@role_required('admin')
 def create_producto():
     data = request.get_json()
     try:
@@ -76,6 +78,7 @@ def create_producto():
 # Ruta para actualizar un producto (ruta protegida)
 @app.route('/api/productos/<int:producto_id>', methods=['PUT'])
 @login_required
+@role_required('admin')
 def update_producto(producto_id):
     data = request.get_json()
     try:
@@ -97,6 +100,7 @@ def update_producto(producto_id):
 # Ruta para eliminar un producto (ruta protegida)
 @app.route('/api/productos/<int:producto_id>', methods=['DELETE'])
 @login_required
+@role_required('admin')
 def delete_producto(producto_id):
     try:
         producto = Producto.get_by_id(producto_id)
@@ -108,8 +112,9 @@ def delete_producto(producto_id):
         return jsonify({'error': str(e)}), 500
     
 #agregar productos al carrito de compras
-@app.route('/api/carrito/agregar', method=['POST'])#ruta
+@app.route('/api/carrito/agregar', methods=['POST'])#ruta
 @login_required # login requerido
+@role_required('cliente')
 def agregar_carrito(): # funcion que se ejecuta cuando se accede a la ruta
     data = request.get_json() # almacenamos los datos de la solicitud en formato json
     try: #bloque try para manejar posibles excepciones durante la ejecucion del codigo
@@ -137,8 +142,9 @@ def agregar_carrito(): # funcion que se ejecuta cuando se accede a la ruta
         return jsonify({'error': str(e)}), 500
 
 #eliminar productos del carrito
-@app.route('/api/carrito/eliminar/<int:carrito_id>', method=['POST'])#decoradores de ruta
+@app.route('/api/carrito/eliminar/<int:carrito_id>', methods=['POST'])#decoradores de ruta
 @login_required #decorador de  login requerido
+@role_required('cliente')#decorador de rol requerido
 def eliminar_carrito(carrito_id):#metodo para eliminar del carrito
     try:
         carrito_item = Carrito.get_by_id(carrito_id) #de la clase carrito filtar por su id
@@ -153,6 +159,7 @@ def eliminar_carrito(carrito_id):#metodo para eliminar del carrito
 #Ruta para listar los productos en el carrito
 @app.route('/api/carrito/listar', methods=['GET'])#decorador de ruta metodo "get"
 @login_required # decorador de usuario autenticado 
+@role_required('cliente')#decorador de rol requerido
 def listar_carrito(): #funcion que se ejecuta al acceder a la ruta
     try:
         carrito_items = Carrito.select().where(Carrito.user == current_user.id)
@@ -173,16 +180,21 @@ def listar_carrito(): #funcion que se ejecuta al acceder a la ruta
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
+
     username = data.get('username')
     password = data.get('password')
+    remember = data.get('remember', False) #falso por defecto
+
+    if not username or not password:
+        return jsonify({'message':'Faltan campos en la solicitud'}), 400
 
     try:
         user = User.get(User.username == username)
     except DoesNotExist:
         return jsonify({'message': 'Usuario o contraseña incorrectos'}), 401
-
+    #verificar si la contraseña es correcta
     if user.check_password(password):
-        login_user(user)
+        login_user(user, remember=remember) # inicia sesion para el usuario que me recuerde
         return jsonify({'message': 'Inicio de sesión exitoso'}), 200
     else:
         return jsonify({'message': 'Usuario o contraseña incorrectos'}), 401
