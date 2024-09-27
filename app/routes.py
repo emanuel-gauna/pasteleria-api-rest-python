@@ -9,11 +9,11 @@ from utils import role_required
 CORS(app, origins=["https://emanuel-gauna.github.io"])
 
 
-
+#ruta de archivos estaticos
 @app.route('/static/<path:path>')
 def send_static(path):
     return send_from_directory('static', path)
-
+#ruta indice
 @app.route('/')
 def index():
     return jsonify({'message': 'Hello, World!'})
@@ -176,31 +176,56 @@ def listar_carrito(): #funcion que se ejecuta al acceder a la ruta
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# Ruta de registro de usuario
+@app.route('/api/registro', methods=['POST'])
+def registro():
+    try:            
+        data = request.get_json() #obtiene los datos del json
+
+        #Validar que los datos no esten presentes
+        if not data.get('username') or not data.get('password'):
+            return jsonify({'error': 'Falta algun campo o dato'}), 400
+        
+        #verificar si el usuario ya existe
+        existing_user = User.get_or_none(User.username == data['username'])
+        if existing_user:
+            return jsonify({'error': 'El usuario ya existe'}), 400
+        
+        #crear nuevo usuario
+        new_user = User.create(username=data['username'])
+        new_user.set_password(data['password'])#metodo para hashear la contraseña
+        new_user.save()#guardar el usuario en la base de datos
+
+        return jsonify({'message': 'Usuario creado con exito'}), 201
+    
+    except Exception as e:
+        return jsonify({'error': 'ha occurrido un error al registrar el usuario', 'details': str(e)}), 500
+
 # Ruta de inicio de sesión
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
 
-    username = data.get('username')
-    password = data.get('password')
+    #validar que los datos necesarios esten presentes
+    if not data.get('username') or not data.get('password'):
+        return jsonify({'error': 'Falta algun campo o dato'}), 400
+    
+    #Buscar al usuario en la base de datos
+    user = User.get_or_none(User.username == data['username'])
+    #verificar si el usuario existe y la contraseña es correcta
+    if not user or not user.check_password(data['password']):
+        return jsonify({'error': 'Credenciales invalidas'}), 401
+    
+    #opcion de recordar usuario
     remember = data.get('remember', False) #falso por defecto
 
-    if not username or not password:
-        return jsonify({'message':'Faltan campos en la solicitud'}), 400
-
-    try:
-        user = User.get(User.username == username)
-    except DoesNotExist:
-        return jsonify({'message': 'Usuario o contraseña incorrectos'}), 401
-    #verificar si la contraseña es correcta
-    if user.check_password(password):
-        login_user(user, remember=remember) # inicia sesion para el usuario que me recuerde
-        return jsonify({'message': 'Inicio de sesión exitoso'}), 200
-    else:
-        return jsonify({'message': 'Usuario o contraseña incorrectos'}), 401
+    #iniciar session para el usuario 
+    login_user(user, remember=remember)
+    return jsonify({'message': 'Inicio de sesion exitoso'}), 200
 
 # Ruta de cierre de sesión
-@app.route('/api/logout')
+@app.route('/api/logout', methods=['POST'])
 @login_required
 def logout():
     logout_user()
